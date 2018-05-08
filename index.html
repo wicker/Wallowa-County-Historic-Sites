@@ -10,10 +10,110 @@
   </head>
   <body>
 
-    <h1>Historic Sites of Wallowa County</h1>
+    <header>
+      <h1>Historic Sites of Wallowa County</h1>
+      <div>
+        <input id="show-markers" type="button" value="Show Markers">
+        <input id="hide-markers" type="button" value="Hide Markers">
+      </div>
+    </header>
+
+    <div id="map"></div>
+
+    <script>
+      var map;
+
+			var markers =[];
+
+      function initMap() {
+
+        var locations = [
+          { name: 'Town of Maxville', 
+            location: {lat: 45.746, lng: -117.557}
+          }, { name: 'Billy Meadow Ranger Station', 
+            location: {lat: 45.829493, lng: -117.043358}
+          }, { name: 'Town of Imnaha', 
+            location: {lat: 45.559444, lng: -116.833333}
+          }, { name: 'Old Chief Joseph\'s Gravesite', 
+            location: {lat: 45.33636, lng: -117.222204}
+          }, { name: 'Wallowa Lake', 
+            location: {lat:  45.308889, lng: -117.210556}
+          }, { name: 'Lostine Corridor', 
+            location: {lat: 45.286686, lng: -117.398393}
+          }, { name: 'Zumwalt Prairie', 
+            location: {lat: 45.5581625, lng: -116.9640334}
+          }, { name: 'Enterprise Courthouse', 
+            location: {lat: 45.425242, lng: -117.2782264}
+          }, { name: 'Flora School', 
+            location: {lat: 45.9009, lng: -117.3104}
+          }
+        ];
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 45.6256975, lng: -117.5269299},
+          zoom: 9.75
+        });
+
+        var infoWindow = new google.maps.InfoWindow();
+
+				for (var i = 0; i < locations.length; i++) {
+          var position = locations[i].location;
+          var name = locations[i].name;
+
+          var marker = new google.maps.Marker({
+            map: map,
+            position: position,
+            name: name,
+            animation: google.maps.Animation.DROP,
+            id: i
+          });
+        
+          markers.push(marker);
+
+          marker.addListener('click', function() {
+            populateInfoWindow(this, infoWindow);
+          });
+        }
+      }
+
+      function populateInfoWindow(marker, infoWindow) {
+        if (infoWindow.marker != marker) {
+          infoWindow.marker = marker;
+          infoWindow.setContent('<h3>' + marker.name + '</h3>'
+              + marker.position);
+          infoWindow.open(map, marker);
+          infoWindow.addListener('closeclick', function() {
+            infoWindow.setMarker(null);
+          });
+        }
+      }
+
+      document.getElementById('show-markers')
+        .addEventListener('click', showMarkers);
+      document.getElementById('hide-markers')
+        .addEventListener('click', hideMarkers);
+
+      function showMarkers() {
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+          bounds.extend(markers[i].position);
+        }
+        map.fitBounds(bounds);
+      }
+
+      function hideMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
+
+    </script>
 
   </body>
 </html>
 
+<script async defer
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyArjoedVp-cYUI5-FoGHvA2XQUJpl3iskE&callback=initMap">
 <script src="js/script.js"></script>
 <script src='js/knockout-3.4.2.js'></script>

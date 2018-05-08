@@ -2,3 +2,24 @@ body {
   font-size: 16px;
   font-family: Raleway, sans-serif;
 }
+
+header {
+  height: 10vh;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+input {
+  background-color: #fff;
+  border-color: 2px solid #800;
+  color: #000;
+  font-size: 1em;
+  padding: 10px;
+  margin: 0 10px;
+}
+
+#map {
+  height: 90vh;
+}
